@@ -1,0 +1,72 @@
+import java.util.Random
+
+rule "Initialiser les lumières"
+when
+    System started
+then
+    logError("jardin.rules", "FUCK FUCK FUCK FUCK")
+end
+
+
+
+/**
+ * initialiser divers états de nos items .
+ */
+
+ // lumières: initialisées fermées
+rule "Initialiser les lumières"
+when
+    System started
+then
+
+    logError("jardin.rules", "FUCK FUCK FUCK FUCK")
+    lumieres?.members.forEach(lum|
+        postUpdate(lum, OFF)
+    )
+end
+
+
+ // verrous: initialisées verrouillés (ON)
+rule "Initialiser les verrous"
+when
+    System started
+then
+    logError("jardin.rules", "FUCK FUCK FUCK FUCK")
+    verrous?.members.forEach(verrou|
+        postUpdate(verrou, ON)
+    )
+end
+
+ // verrous: initialisées verrouillés (ON)
+rule "Initialiser les thermostats"
+when
+    System started
+then
+
+    verrous?.members.forEach(verrou|
+        postUpdate(verrou, ON)
+    )
+end
+
+rule "Initialiser les températures aléatoires"
+when
+    System started
+then
+    logInfo("Info", "Initialiser les températures aléatoires")
+    gTemperature.members.forEach(temperature|
+        postUpdate(temperature, 17.5 ))
+end
+
+rule "Initialiser les températures  - controllers"
+when
+    System started
+then
+    gThermostat.members.forEach(thermo|
+        postUpdate(thermo,22)
+    )
+end
+
+
+
+
+
