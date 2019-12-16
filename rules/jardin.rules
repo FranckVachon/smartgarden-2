@@ -68,5 +68,22 @@ end
 
 
 
+// Exemple de règle avec MQTT
 
+rule "Mqtt test ping"
+when
+
+    // I could triger it on something I decide - say some on/off switch gets changed: 
+    //    Item Sonoff_Action received command
+    
+    Item verrous_piscine received update
+
+then
+    logInfo("jardin.rules", "MQTT broker test ping. HELLO WORLD!")
+    val actionsBroker = getActions("mqtt","mqtt:broker:MyMQTTBroker") // change to your broker name!
+
+    // here i need to just tell mqtt to publish something, we'll care about what later
+    actionsBroker.publishMQTT( "Hello world!", "1")
+    verrous_piscine.postUpdate(OFF)                     // just to prove we executed that
+end
 
