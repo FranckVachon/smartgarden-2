@@ -1,43 +1,24 @@
-sitemap smartgarden label="Smart Garden"
-{
-
-Frame {
+sitemap smartgarden label="Smart Garden" {
 
 	Frame {
-		Group item=gPiscine 	label="Piscine" icon="water"
-		Group item=gJardin 		label="Jardin" 	icon="garden"
 
-	}
-
-
-		Frame label="Demo" {
+		Frame {
 
 		// regrouper tous les objets d'un même type dans un même widget qu'on peut aisément controller 
 			Text label="Tous les objets intelligents" icon="group" {
-				Switch item=lumieres mappings=[OFF="Tout fermer", ON="Tout allumer"]
-				Switch item=verrous mappings=[OFF="Tout deverrouiller", ON="Tout verrouiller"]
+				Switch item=lumieres icon="lightBulb" mappings=[OFF="OFF", ON="ON"]
+				Switch item=lumieresPatio icon="lightBulb" mappings=[OFF="OFF", ON="ON"]
+				Switch item=gicleurs icon="faucet" mappings=[OFF="OFF", ON="ON"]
+				Switch item=verrous icon="lock" mappings=[OFF="Unlocked", ON="Locked"]
 				Setpoint item=temp_piscine_desiree minValue=15 maxValue=30 step=0.5
-
 			}
-			Text label="Widget Overview" icon="chart" {
-				Frame label="Binary Widgets" {
-					Switch item=DemoSwitch label="Toggle Switch"
-					Switch item=DemoSwitch label="Button Switch" mappings=[ON="On"]
-				}
-				Frame label="Discrete Widgets" {
-					Setpoint item=temp_piscine minValue=15 maxValue=30 step=0.5
-				}
-				Frame label="Percent-based Widgets" {
-					Slider item=DimmedLight switchSupport
-					Colorpicker item=RGBLight icon="slider"
-					Switch item=DemoShutter
-					Slider item=DemoBlinds
-				}
-			}
+		}
 
-			}
-
-
-
-}
+		Frame {
+			Group item=gJardin 			label="Jardin" 	icon="garden"
+			Group item=gPatio 			label="Patio" 	icon="terrace"
+			Group item=gPiscine 		label="Piscine" icon="water"
+			Group item=gTerrainJeu 		label="Terrain de jeu" 	icon="smiley"
+		}
+	}
 }

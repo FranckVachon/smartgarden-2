@@ -1,70 +1,42 @@
 import java.util.Random
 
-rule "Initialiser les lumières"
-when
-    System started
-then
-    logError("jardin.rules", "FUCK FUCK FUCK FUCK")
-end
-
-
-
 /**
  * initialiser divers états de nos items .
  */
 
- // lumières: initialisées fermées
-rule "Initialiser les lumières"
-when
-    System started
-then
-
-    logError("jardin.rules", "FUCK FUCK FUCK FUCK")
-    lumieres?.members.forEach(lum|
-        postUpdate(lum, ON)
-    )
-end
-
-
- // verrous: initialisées verrouillés (ON)
 rule "Initialiser les verrous"
 when
     System started
 then
-    logError("jardin.rules", "FUCK FUCK FUCK FUCK")
-    verrous?.members.forEach(verrou|
-        postUpdate(verrou, ON)
-    )
+    verrous.sendCommand(ON)
 end
 
- // verrous: initialisées verrouillés (ON)
-rule "Initialiser les thermostats"
+
+rule "Initialiser les gicleurs"
 when
     System started
 then
-
-    verrous?.members.forEach(verrou|
-        postUpdate(verrou, ON)
-    )
+    gicleurs.sendCommand(OFF)
 end
 
-rule "Initialiser les températures aléatoires"
+
+rule "Initialiser les détecteurs de mouvement"
 when
     System started
 then
-    logInfo("Info", "Initialiser les températures aléatoires")
-    gTemperature.members.forEach(temperature|
-        postUpdate(temperature, 17.5 ))
+    gDetecteursMouvements.members.forEach(detector|detector.sendCommand(OFF))  
 end
 
-rule "Initialiser les températures  - controllers"
+
+rule "Initialiser les températures de la piscine"
 when
     System started
 then
-    gThermostat.members.forEach(thermo|
-        postUpdate(thermo,22)
-    )
+    logInfo("Info", "Initialiser les températures de la piscine.")
+    temp_piscine_actuelle.sendCommand(17.5)
+    temp_piscine_desiree.sendCommand(22)
 end
+
 
 rule "Turn on lights when detected movement"
 when
@@ -74,12 +46,35 @@ when
 	Item mouvement_nord_est changed from OFF to ON or
 	Item mouvement_est changed from OFF to ON
 then
-	var nightTimeStart = 2300
+	var nightTimeStart = 1600
 	var nightTimeEnd = 0530
 	var currentTime = now.getHourOfDay * 100 + now.getMinuteOfHour
+
 	if (currentTime >= nightTimeStart || currentTime <= nightTimeEnd) {
+        // Nighttime
+        lumieres.sendCommand(ON)
 	}
 	else {
-		lumieresPatio.sendCommand(ON)
+        // Daytime
 	}
 end
+
+
+rule "Turn off sprinklers when detected movement or door unlock"
+when
+    Item mouvement_nord_ouest changed from OFF to ON or
+    Item mouvement_sud_ouest changed from OFF to ON or
+    Item mouvement_sud_est changed from OFF to ON or
+    Item mouvement_nord_est changed from OFF to ON or
+    Item mouvement_est changed from OFF to ON or
+    Item verrous_porte_exterieure changed from ON to OFF
+then
+    gicleurs.sendCommand(OFF)
+end
+
+
+
+
+
+
+
