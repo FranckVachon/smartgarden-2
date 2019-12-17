@@ -21,7 +21,7 @@ then
 
     logError("jardin.rules", "FUCK FUCK FUCK FUCK")
     lumieres?.members.forEach(lum|
-        postUpdate(lum, OFF)
+        postUpdate(lum, ON)
     )
 end
 
@@ -66,7 +66,20 @@ then
     )
 end
 
-
-
-
-
+rule "Turn on lights when detected movement"
+when
+    Item mouvement_nord_ouest changed from OFF to ON or
+	Item mouvement_sud_ouest changed from OFF to ON or
+	Item mouvement_sud_est changed from OFF to ON or
+	Item mouvement_nord_est changed from OFF to ON or
+	Item mouvement_est changed from OFF to ON
+then
+	var nightTimeStart = 2300
+	var nightTimeEnd = 0530
+	var currentTime = now.getHourOfDay * 100 + now.getMinuteOfHour
+	if (currentTime >= nightTimeStart || currentTime <= nightTimeEnd) {
+	}
+	else {
+		lumieresPatio.sendCommand(ON)
+	}
+end
