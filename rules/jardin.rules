@@ -8,19 +8,55 @@ rule "Initialiser les verrous"
 when
     System started
 then
+	logInfo("Verrous", "Tous les verrous du jardin sont actives.")
     verrous.sendCommand(ON)
 end
 
+rule "Initialiser les lumieres"
+when
+    System started
+then
+	logInfo("Lumieres", "Toutes les lumieres du jardin sont eteintes.")
+    lumieres.sendCommand(OFF)
+end
+
+rule "Message dans le log lorsque tous les verrous sont desactives"
+when
+    Item verrous changed from ON to OFF
+then
+	logInfo("Verrous", "Tous les verrous du jardin sont desactives.")
+end
+
+rule "Message dans le log lorsque tous les verrous sont actives"
+when
+    Item verrous changed from OFF to ON
+then
+	logInfo("Verrous", "Tous les verrous du jardin sont actives.")
+end
 
 rule "Initialiser les gicleurs"
 when
     System started
 then
-    gicleurs.sendCommand(OFF)
+	logInfo("Gicleurs", "Tous les gicleurs du jardin sont actives.")
+    gicleurs.sendCommand(ON)
 end
 
+rule "Message dans le log lorsque tous les gicleurs sont désactivés"
+when
+	Item gicleurs changed from ON to OFF
+then
+	logInfo("Gicleurs", "Tous les gicleurs du jardin sont desactives.")
+end
 
-rule "Initialiser les détecteurs de mouvement"
+rule "Message dans le log lorsque tous les gicleurs sont actives"
+when
+	Item gicleurs changed from OFF to ON
+then
+	logInfo("Gicleurs", "Tous les gicleurs du jardin sont actives.")
+end
+
+rule "Initialiser les detecteurs de mouvement"
 when
     System started
 then
@@ -32,19 +68,42 @@ rule "Initialiser les températures de la piscine"
 when
     System started
 then
-    logInfo("Info", "Initialiser les températures de la piscine.")
+    logInfo("Info", "Initialisation des températures de la piscine.")
     temp_piscine_actuelle.sendCommand(17.5)
     temp_piscine_desiree.sendCommand(22)
 end
 
+rule "Message dans le log lorsque changement de température désirée"
+when
+	Item temp_piscine_desiree received update
+then
+	logInfo("Piscine", "La temperature desiree de la piscine a changee pour : " + temp_piscine_desiree.state + " °C")
+end
 
-rule "Turn on lights when detected movement"
+rule "Log Message when Turn on lights"
+when
+    Item lumieres changed from OFF to ON
+then
+	
+	logInfo("Lumieres", "Toutes les lumieres du jardin sont allumees.")
+
+end
+
+rule "Log Message when Turn off lights"
+when
+    Item lumieres changed from ON to OFF
+then
+	
+	logInfo("Lumieres", "Toutes les lumieres du jardin sont eteintes.")
+
+end
+
+
+rule "Turn on pool lights when detected movement (North West)"
 when
     Item mouvement_nord_ouest changed from OFF to ON or
-	Item mouvement_sud_ouest changed from OFF to ON or
-	Item mouvement_sud_est changed from OFF to ON or
-	Item mouvement_nord_est changed from OFF to ON or
-	Item mouvement_est changed from OFF to ON
+	Item verrous_piscine changed from ON to OFF
+	
 then
 	var nightTimeStart = 1600
 	var nightTimeEnd = 0530
@@ -52,29 +111,196 @@ then
 
 	if (currentTime >= nightTimeStart || currentTime <= nightTimeEnd) {
         // Nighttime
-        lumieres.sendCommand(ON)
+		logInfo("Lumieres Piscine", "Toutes les lumieres de la piscine sont allumees.")
+        lumieresPiscine.sendCommand(ON)
 	}
 	else {
         // Daytime
+		logInfo("Lumieres Piscine", "currentTime + " : Lumiere non necessaire d'etre allumee")
 	}
 end
 
-
-rule "Turn off sprinklers when detected movement or door unlock"
+rule "Log message when turning off pool lights when detected movement (North West) off"
 when
-    Item mouvement_nord_ouest changed from OFF to ON or
-    Item mouvement_sud_ouest changed from OFF to ON or
-    Item mouvement_sud_est changed from OFF to ON or
-    Item mouvement_nord_est changed from OFF to ON or
-    Item mouvement_est changed from OFF to ON or
-    Item verrous_porte_exterieure changed from ON to OFF
+    Item mouvement_nord_ouest changed from ON to OFF
+	
 then
-    gicleurs.sendCommand(OFF)
+		logInfo("Lumieres Piscine", "Toutes les lumieres de la piscine sont eteintes.")
 end
 
 
+rule "Turn on patio lights when detected movement (North East or East)"
+when
+    Item mouvement_nord_est changed from OFF to ON or
+	Item mouvement_est changed from OFF to ON or
+	Item verrous_porte_exterieure changed from ON to OFF
+	
+then
+	var nightTimeStart = 1600
+	var nightTimeEnd = 0530
+	var currentTime = now.getHourOfDay * 100 + now.getMinuteOfHour
+
+	if (currentTime >= nightTimeStart || currentTime <= nightTimeEnd) {
+        // Nighttime
+		logInfo("Lumieres Patio", "Toutes les lumieres du patio sont allumees.")
+        lumieresPatio.sendCommand(ON)
+	}
+	else {
+        // Daytime
+		logInfo("Lumieres Patio", "currentTime + " : Lumiere non necessaire d'etre allumee")
+
+	}
+end
+
+rule "Log message when turning off patio lights when detected movement (North East or East) off"
+when
+    Item mouvement_nord_est changed from ON to OFF or
+	Item mouvement_est changed from ON to OFF or 
+	Item lumieresPatio changed from ON to OFF
+	
+then
+	logInfo("Lumieres Patio", "Toutes les lumieres du patio sont eteintes.")
+end
+
+rule "Log message when turning on patio lights"
+when
+	Item lumieresPatio changed from OFF to ON
+	
+then
+	logInfo("Lumieres Patio", "Toutes les lumieres du patio sont allumees.")
+end
+
+rule "Turn on playground lights when detected movement (South East or South West)"
+when
+    Item mouvement_sud_est changed from OFF to ON or
+	Item mouvement_sud_ouest changed from OFF to ON 
+	
+then
+	var nightTimeStart = 1600
+	var nightTimeEnd = 0530
+	var currentTime = now.getHourOfDay * 100 + now.getMinuteOfHour
+
+	if (currentTime >= nightTimeStart || currentTime <= nightTimeEnd) {
+        // Nighttime
+		logInfo("Lumieres Terrain Jeu", "Toutes les lumieres du terrain de jeu sont allumees.")
+        lumieresPatio.sendCommand(ON)
+	}
+	else {
+        // Daytime
+		logInfo("Lumieres Terrain de jeu", "currentTime + " : Lumiere non necessaire d'etre allumee")
+
+	}
+end
+
+rule "Log message when turning off playground lights when detected movement (South East or South West) off"
+when
+    Item mouvement_sud_est changed from ON to OFF or
+	Item mouvement_sud_ouest changed from ON to OFF 
+	
+then
+	logInfo("Lumieres Terrain Jeu", "Toutes les lumieres du terrain de jeu sont eteintes.")
+end
+
+rule "Message dans le log lorsque le verrou barbecue est deverouille"
+when
+    Item verrous_barbecue changed from ON to OFF
+then
+	logInfo("Verrou BBQ", "Le verrou du barbecue est deverouille.")
+end
+
+rule "Message dans le log lorsque le verrou de la porte de piscine est deverouille"
+when
+    Item verrous_piscine changed from ON to OFF
+then
+	logInfo("Verrou piscine", "Le verrou de la piscine est deverouille.")
+end
+
+rule "Message dans le log lorsque le verrou de la porte exterieure du jardin est deverouille"
+when
+    Item verrous_porte_exterieure changed from ON to OFF
+then
+	logInfo("Verrou porte exterieure", "Le verrou de la porte exterieure du jardin est deverouille.")
+end
+
+rule "Message dans le log lorsque le verrou du feu de bois est deverouille"
+when
+    Item verrous_feu changed from ON to OFF
+then
+	logInfo("Verrou feu", "Le verrou du feu de bois est deverouille.")
+end
 
 
+rule "Message dans le log lorsque le verrou barbecue est verouille"
+when
+    Item verrous_barbecue changed from OFF to ON
+then
+	logInfo("Verrou BBQ", "Le verrou du barbecue est verouille.")
+end
 
+rule "Message dans le log lorsque le verrou de la porte de piscine est verouille"
+when
+    Item verrous_piscine changed from OFF to ON
+then
+	logInfo("Verrou piscine", "Le verrou de la piscine est verouille.")
+end
 
+rule "Message dans le log lorsque le verrou de la porte exterieure du jardin est verouille"
+when
+    Item verrous_porte_exterieure changed from OFF to ON
+then
+	logInfo("Verrou porte exterieure", "Le verrou de la porte exterieure du jardin est verouille.")
+end
 
+rule "Message dans le log lorsque le verrou du feu de bois est verouille"
+when
+    Item verrous_feu changed from OFF to ON
+then
+	logInfo("Verrou feu", "Le verrou du feu de bois est verouille.")
+end	
+			
+rule "Log Message Turn off sprinklers"
+when
+    Item gicleurs changed from ON to OFF
+then
+	logInfo("Gicleurs", "Tous les gicleurs du jardin sont desactives.")
+end
+
+rule "Log Message Turn on sprinklers"
+when
+    Item gicleurs changed from OFF to ON
+then
+	logInfo("Gicleurs", "Tous les gicleurs du jardin sont actives.")
+end
+
+rule "Turn off sprinklers when detected movement or door unlock in pool"
+when
+    Item mouvement_nord_ouest changed from OFF to ON or
+	Item verrous_piscine changed from ON to OFF
+then
+	logInfo("Gicleurs piscine", "Tous les gicleurs proches de la piscine sont desactives.")
+    gicleur_piscine_2.sendCommand(OFF)
+	gicleur_piscine_1.sendCommand(OFF)
+end
+
+rule "Turn off sprinklers when detected movement or door unlock in patio"
+when
+    Item mouvement_nord_est changed from OFF to ON or
+	Item mouvement_est changed from OFF to ON or
+	Item verrous_porte_exterieure changed from ON to OFF
+	
+then
+	logInfo("Gicleurs patio", "Tous les gicleurs proches du patio sont desactives.")
+    gicleur_patio_2.sendCommand(OFF)
+	gicleur_patio_1.sendCommand(OFF)
+end
+
+rule "Turn off sprinklers when detected movement or door unlock in playground"
+when
+    Item mouvement_sud_est changed from OFF to ON or
+	Item mouvement_sud_ouest changed from OFF to ON
+	
+then
+	logInfo("Gicleurs terrain de jeu", "Tous les gicleurs proches du terrain de jeu sont desactives.")
+    gicleur_terrainJeu_1.sendCommand(OFF)
+	gicleur_terrainJeu_2.sendCommand(OFF)
+end
