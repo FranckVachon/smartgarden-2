@@ -1,10 +1,11 @@
 
+/* General groups */
 Group gJardin         "Jardin"   		   <garden>        ["Jardin"]
 Group gPatio          "Patio"   		   <terrace>       ["Patio"]
 Group gPiscine        "Piscine"   		   <water>     	   ["Piscine"]
 Group gTerrainJeu     "Terrain de jeu"     <smiley>        ["Terrain de jeu"]
 Group gDetecteursMouvements	  "DetecteursMouvement"	  <motion>	   ["DetecteursMouvement"]
-
+Group gDetecteursContact	  "DetecteursContact"	  <motion>	   ["DetecteursContact"]
 
 /* active groups */
 Group:Switch:OR(ON, OFF)        lumieres      		"Toutes les lumières [(%d)]"
@@ -12,9 +13,12 @@ Group:Switch:OR(ON, OFF)        lumieresPatio       "Lumières du patio [(%d)]"
 Group:Switch:OR(ON, OFF)        lumieresPiscine     "Lumières de la piscine [(%d)]"
 Group:Switch:OR(ON, OFF)        lumieresTerrainJeu  "Lumières du terrain de jeu [(%d)]"
 Group:Switch:OR(ON, OFF)        verrous       		"Tous les verrous [(%d)]"
+Group:Switch:OR(ON, OFF)        verrousPatio       	"Verrous du patio [(%d)]"
 Group:Switch:OR(ON, OFF)        gicleurs      		"Tous les gicleurs [(%d)]"
+Group:Switch:OR(ON, OFF)        gicleursPatio      	"Gicleurs du patio [(%d)]"
+Group:Switch:OR(ON, OFF)        gicleursPiscine     "Gicleurs de la piscine [(%d)]"
+Group:Switch:OR(ON, OFF)        gicleursTerrainJeu  "Gicleurs du terrain de jeu [(%d)]"
 Group:Number:AVG                Temperature 		"Avg. Room Temperature [%.1f °C]"   <temperature>   (Status)
-
 
 // lumières de la piscine
 Dimmer light_piscine_perimetre_ouest       "Lumière piscine ouest"                (gPiscine, lumieres, lumieresPiscine)     ["Lumiere"]
@@ -29,11 +33,15 @@ Dimmer light_terrain_jeu_est               "Lumière terrain de jeu est"        
 Dimmer light_patio_1                       "Lumière patio 1"                      (gPatio, lumieres, lumieresPatio)      ["Lumiere"]
 Dimmer light_patio_2                       "Lumière patio 2"                      (gPatio, lumieres, lumieresPatio)      ["Lumiere"]
 
+// detecteurs de contact
+Switch contact_porte_cloture			   "Detecteur de contact cloture"	<door>	  (gJardin, gDetecteursContact)		["Contact"]
+Switch contact_porte_piscine			   "Detecteur de contact piscine"	<door>	  (gJardin, gDetecteursContact)		["Contact"]
+
 // verrous
-Switch verrous_piscine                     "Verrous piscine"               <door>       (gPiscine, verrous)      ["Verrou"]
-Switch verrous_barbecue                    "Verrous barbecue"              <lock>       (gPatio, verrous)       ["Verrou"]
-Switch verrous_porte_exterieure            "Verrous porte extérieure"      <door>       (gJardin, verrous)       ["Verrou"]
-Switch verrous_feu						   "Verrous feu de camp"		   <lock>		(gPatio, verrous)		["Verrou"]
+Switch verrous_piscine                     "Verrous piscine"               <door>       (gPiscine, verrous)      			  ["Verrou"]
+Switch verrous_barbecue                    "Verrous barbecue"              <lock>       (gPatio, verrous, verrousPatio)       ["Verrou"]
+Switch verrous_porte_exterieure            "Verrous porte extérieure"      <door>       (gJardin, verrous)       			  ["Verrou"]
+Switch verrous_feu						   "Verrous feu de camp"		   <lock>		(gPatio, verrous, verrousPatio)		  ["Verrou"]
 
 //Termometres
 Number temp_piscine_desiree                "Piscine (désirée):  [%.1f °C]"          <temperature>       (gPiscine)   ["Temperature", "Controller"]
@@ -47,22 +55,9 @@ Switch mouvement_nord_est		           "Detecteur de mouvement nord-est"		<motion
 Switch mouvement_est		               "Detecteur de mouvement est"			    <motion>    (gJardin, gDetecteursMouvements)
 
 // gicleurs automatiques
-Switch gicleur_patio_1		        	   "Gicleur patio 1"					(gJardin, gicleurs)		["Gicleurs"]
-Switch gicleur_patio_2		       	       "Gicleur patio 2"					(gJardin, gicleurs)		["Gicleurs"]
-Switch gicleur_piscine_1	       	       "Gicleur piscine 1"					(gJardin, gicleurs)		["Gicleurs"]
-Switch gicleur_piscine_2		       	   "Gicleur piscine 2"					(gJardin, gicleurs)		["Gicleurs"]
-Switch gicleur_terrainJeu_1	       	       "Gicleur terrain de jeu 1"			(gJardin, gicleurs)		["Gicleurs"]
-Switch gicleur_terrainJeu_2		       	   "Gicleur terrain de jeu 2"			(gJardin, gicleurs)		["Gicleurs"]
-
-
-
-
-
-
-
-
-
-
-
-
-
+Switch gicleur_patio_1		        	   "Gicleur patio 1"			<faucet>		(gJardin, gicleurs, gicleursPatio)		["Gicleurs"]
+Switch gicleur_patio_2		       	       "Gicleur patio 2"			<faucet>		(gJardin, gicleurs, gicleursPatio)		["Gicleurs"]
+Switch gicleur_piscine_1	       	       "Gicleur piscine 1"			<faucet>		(gJardin, gicleurs, gicleursPiscine)		["Gicleurs"]
+Switch gicleur_piscine_2		       	   "Gicleur piscine 2"			<faucet>		(gJardin, gicleurs, gicleursPiscine)		["Gicleurs"]
+Switch gicleur_terrainJeu_1	       	       "Gicleur terrain de jeu 1"	<faucet>		(gJardin, gTerrainJeu, gicleurs, gicleursTerrainJeu)		["Gicleurs"]
+Switch gicleur_terrainJeu_2		       	   "Gicleur terrain de jeu 2"	<faucet>		(gJardin, gTerrainJeu, gicleurs, gicleursTerrainJeu)		["Gicleurs"]

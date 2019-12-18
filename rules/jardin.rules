@@ -10,6 +10,7 @@ when
 then
 	logInfo("Verrous", "Tous les verrous du jardin sont actives.")
     verrous.sendCommand(ON)
+    verrousPatio.sendCommand(ON)
 end
 
 rule "Initialiser les lumieres"
@@ -35,6 +36,13 @@ then
     gDetecteursMouvements.members.forEach(detector|detector.sendCommand(OFF))  
 end
 
+rule "Initialiser les detecteurs de contact"
+when
+    System started
+then
+    gDetecteursContact.members.forEach(detector|detector.sendCommand(OFF))  
+end
+
 rule "Initialiser les temperatures de la piscine"
 when
     System started
@@ -47,7 +55,6 @@ end
 /****************************************************************************************
  * 				Messages dans le log sur l'état des différents items .					*
  ***************************************************************************************/
-
 
 /****************************************************************************************
  * 	Règles et messages dans le log sur l'état des différents items dans la piscine .	*
@@ -128,6 +135,10 @@ then
 	logInfo("Lumieres Piscine", "La lumiere submergee de la piscine est allumee.")
 end
 
+
+
+
+
 /****************************************************************************************
  *    Règles et messages dans le log sur l'état des différents items dans le patio .	*
  ***************************************************************************************/
@@ -193,6 +204,11 @@ when
 then
 	logInfo("Lumieres Patio", "La lumiere 2 du patio est allumee.")
 end
+
+
+
+
+
 /****************************************************************************************
  * 	Règles et messages dans le log sur l'état des différents items dans la terrain jeu .*
  ***************************************************************************************/
@@ -257,6 +273,10 @@ when
 then
 	logInfo("Lumieres Terrain Jeu", "La lumiere Est du terrain de jeu est allumee.")
 end
+
+
+
+
 
 /****************************************************************************************
  *	 	Règles et messages dans le log sur l'état de tous les objets intelligents 	   .*
@@ -330,6 +350,10 @@ then
 	logInfo("Lumieres Patio", "Toutes les lumieres du patio sont allumees.")
 end
 
+
+
+
+
 /****************************************************************************************
  * 				Messages dans le log sur l'état des différents verrous				   .*
  ***************************************************************************************/
@@ -389,7 +413,11 @@ when
 then
 	logInfo("Verrou feu", "Le verrou du feu de bois est verouille.")
 end	
-		
+	
+
+
+
+
 /****************************************************************************************
  * 			Messages dans le log sur l'état des différents gicleurs dans le jardin	   .*
  ***************************************************************************************/
@@ -525,6 +553,10 @@ then
 	logInfo("Gicleurs", "Le gicleur 1 du patio est active.")
 end
 
+
+
+
+
 /****************************************************************************************
  *Messages dans le log sur l'état des différents détecteurs de mouvements dans le jardin*
  ***************************************************************************************/
@@ -598,3 +630,45 @@ when
 then
 	logInfo("Detecteurs de mouvement", "Activite detectee au Nord-Ouest du jardin.")
 end
+
+
+
+
+
+/****************************************************************************************
+ *Règles et Messages dans le log sur l'état des différents détecteurs de contact dans le jardin*
+ ***************************************************************************************/
+
+rule "Log Message contact porte cloture OFF"
+when
+    Item contact_porte_cloture changed from ON to OFF
+    
+then
+    logInfo("Detecteur contact cloture", "Detecteur de contact de la cloture est a OFF.")
+end 
+
+rule "Log Message contact porte cloture ON"
+when
+    Item contact_porte_cloture changed from OFF to ON
+    lumieres.sendCommand(ON)
+then
+    logInfo("Detecteur contact cloture", "Detecteur de contact de la cloture est a ON.")
+end 
+
+rule "Log Message contact porte piscine OFF"
+when
+    Item contact_porte_piscine changed from ON to OFF
+    
+then
+    logInfo("Detecteur contact piscine", "Detecteur de contact de la piscine est a OFF.")
+end 
+
+rule "Log Message contact porte cloture ON"
+when
+    Item contact_porte_piscine changed from OFF to ON
+    
+then
+    logInfo("Detecteur contact piscine", "Detecteur de contact de la piscine est a ON.")
+    lumieresPiscine.sendCommand(ON)
+end 
+
