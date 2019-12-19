@@ -670,5 +670,4 @@ when
 then
     logInfo("Detecteur contact piscine", "Detecteur de contact de la piscine est a ON.")
     lumieresPiscine.sendCommand(ON)
-end 
-
+end

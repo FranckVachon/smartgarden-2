@@ -8,30 +8,30 @@ Group gDetecteursMouvements	  "DetecteursMouvement"	  <motion>	   ["DetecteursMo
 Group gDetecteursContact	  "DetecteursContact"	  <motion>	   ["DetecteursContact"]
 
 /* active groups */
-Group:Switch:OR(ON, OFF)        lumieres      		"Toutes les lumières [(%d)]"
+Group:Switch:OR(ON, OFF)        lumieres      		"Toutes les lumières [(%d)]"				{channel="mqtt:topic:mosquitto:mything:lights"}
 Group:Switch:OR(ON, OFF)        lumieresPatio       "Lumières du patio [(%d)]"
 Group:Switch:OR(ON, OFF)        lumieresPiscine     "Lumières de la piscine [(%d)]"
 Group:Switch:OR(ON, OFF)        lumieresTerrainJeu  "Lumières du terrain de jeu [(%d)]"
-Group:Switch:OR(ON, OFF)        verrous       		"Tous les verrous [(%d)]"
+Group:Switch:OR(ON, OFF)        verrous       		"Tous les verrous [(%d)]"					{channel="mqtt:topic:mosquitto:mything:locks"}
 Group:Switch:OR(ON, OFF)        verrousPatio       	"Verrous du patio [(%d)]"
-Group:Switch:OR(ON, OFF)        gicleurs      		"Tous les gicleurs [(%d)]"
+Group:Switch:OR(ON, OFF)        gicleurs      		"Tous les gicleurs [(%d)]"					{channel="mqtt:topic:mosquitto:mything:sprinklers"}
 Group:Switch:OR(ON, OFF)        gicleursPatio      	"Gicleurs du patio [(%d)]"
 Group:Switch:OR(ON, OFF)        gicleursPiscine     "Gicleurs de la piscine [(%d)]"
 Group:Switch:OR(ON, OFF)        gicleursTerrainJeu  "Gicleurs du terrain de jeu [(%d)]"
 Group:Number:AVG                Temperature 		"Avg. Room Temperature [%.1f °C]"   <temperature>   (Status)
 
 // lumières de la piscine
-Dimmer light_piscine_perimetre_ouest       "Lumière piscine ouest"                (gPiscine, lumieres, lumieresPiscine)     ["Lumiere"]
-Dimmer light_piscine_perimetre_nord        "Lumière piscine nord"                 (gPiscine, lumieres, lumieresPiscine)     ["Lumiere"]
-Dimmer light_piscine_submergee             "Lumière aquatique"                    (gPiscine, lumieres, lumieresPiscine)     ["Lumiere"]
+Dimmer light_piscine_perimetre_ouest       "Lumière piscine ouest"    	            (gPiscine, lumieres, lumieresPiscine)     ["Lumiere"]
+Dimmer light_piscine_perimetre_nord        "Lumière piscine nord"    	             (gPiscine, lumieres, lumieresPiscine)     ["Lumiere"]
+Dimmer light_piscine_submergee             "Lumière aquatique"      	              (gPiscine, lumieres, lumieresPiscine)     ["Lumiere"]
 
 // lumières du terrain de jeu
-Dimmer light_terrain_jeu_ouest             "Lumière terrain de jeu ouest"         (gTerrainJeu, lumieres, lumieresTerrainJeu)      ["Lumiere"]
-Dimmer light_terrain_jeu_est               "Lumière terrain de jeu est"           (gTerrainJeu, lumieres, lumieresTerrainJeu)      ["Lumiere"]
+Dimmer light_terrain_jeu_ouest             "Lumière terrain de jeu ouest"        (gTerrainJeu, lumieres, lumieresTerrainJeu)      ["Lumiere"]
+Dimmer light_terrain_jeu_est               "Lumière terrain de jeu est"          (gTerrainJeu, lumieres, lumieresTerrainJeu)      ["Lumiere"]
 
 // lumières du patio
-Dimmer light_patio_1                       "Lumière patio 1"                      (gPatio, lumieres, lumieresPatio)      ["Lumiere"]
-Dimmer light_patio_2                       "Lumière patio 2"                      (gPatio, lumieres, lumieresPatio)      ["Lumiere"]
+Dimmer light_patio_1                       "Lumière patio 1"           	           (gPatio, lumieres, lumieresPatio)      ["Lumiere"]
+Dimmer light_patio_2                       "Lumière patio 2"           	           (gPatio, lumieres, lumieresPatio)      ["Lumiere"]
 
 // detecteurs de contact
 Switch contact_porte_cloture			   "Detecteur de contact cloture"	<door>	  (gJardin, gDetecteursContact)		["Contact"]

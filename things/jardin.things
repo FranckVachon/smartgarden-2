@@ -38,3 +38,14 @@ Bridge  zwave:serial_zstick:8c582004    "ZWave Controller"  [ port="/dev/ttyACM0
     Thing   shenzhen_motionsensor_00_000       node12   "détecteur de mouvements à (0,4)" @ "smart bedroom"     [ node_id=11 ] // motionsensor_3
     Thing   shenzhen_motionsensor_00_000       node13   "détecteur de mouvements à (4,4)" @ "smart bedroom"     [ node_id=11 ] // motionsensor_4, luxmeter_2, battery
 }
+
+
+Bridge mqtt:broker:mosquitto [ host="0.0.0.0", secure=false ]
+{
+    Thing topic mything {
+    Channels:
+		Type switch : lights "All lights" [ stateTopic="lights/enabled", commandTopic="lights/enabled/set", postCommand="true"]
+		Type switch : locks "All locks" [ stateTopic="locks/enabled", commandTopic="locks/enabled/set", postCommand="true"]
+		Type switch : sprinklers "All sprinklers" [ stateTopic="sprinklers/enabled", commandTopic="sprinklers/enabled/set", postCommand="true"]
+    }
+}
