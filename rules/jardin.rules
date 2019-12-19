@@ -68,22 +68,35 @@ end
 
 
 
-// Exemple de règle avec MQTT
-
-rule "Mqtt test ping"
-when
-
-    // I could triger it on something I decide - say some on/off switch gets changed: 
-    //    Item Sonoff_Action received command
-    
+//  Exemple de règle avec MQTT - publier sur un update d'item
+rule "Mqtt - publish to topic on item action"
+when    
     Item verrous_piscine received update
-
 then
-    logInfo("jardin.rules", "MQTT broker test ping. HELLO WORLD!")
-    val actionsBroker = getActions("mqtt","mqtt:broker:MyMQTTBroker") // change to your broker name!
+    logInfo("jardin.rules", "mqtt test ping rule script... ")
 
-    // here i need to just tell mqtt to publish something, we'll care about what later
-    actionsBroker.publishMQTT( "Hello world!", "1")
-    verrous_piscine.postUpdate(OFF)                     // just to prove we executed that
+    // must match: Bridge mqtt:broker:mosquitto [ host="0.0.0.0", secure=false ] in jardin.things
+    val mqttActions = getActions("mqtt", "mqtt:broker:mosquitto")
+    mqttActions.publishMQTT("test", "This is the switch speaking")
 end
+
+// Exemple de règles mqtt - update un item par un publish sur un topic
+rule "mqtt topic updates an item state"
+when
+    // again, mqtt:broker:mosquitto must match the broker defined in things.
+    Channel "mqtt:broker:mosquitto:mything" triggered
+then
+    logInfo("jardin.rules", "mqtt - updating an item from a topic ")
+    lumieres?.members.forEach(lum| postUpdate(lum, OFF) )
+
+end
+
+
+rule "Receive all"
+when 
+      Channel "mqtt:broker:mosquitto" triggered
+then 
+    logInfo("jardin.rules", "mqtt triggered from client ")
+end
+
 

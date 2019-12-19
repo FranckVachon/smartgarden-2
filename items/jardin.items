@@ -1,28 +1,3 @@
 
 
-Group gJardin         "Jardin"     <garden>    ["Jardin"]
-Group gPiscine        "Piscine"   <water>     ["Piscine"]
-Group gVerrous        "Verrous"   <lock>      ["Verrous"]
-Group gTemperature    "Temperature"   <temperature>      ["Temperature"]
-Group gThermostat     "Thermostat"   <temperature>      ["Thermostat"]
-
-
-/* active groups */
-Group:Switch:OR(ON, OFF)        lumieres      "Toutes les lumières [(%d)]"
-Group:Switch:OR(ON, OFF)        verrous       "Toutes les verrous [(%d)]"
-Group:Number:AVG                Temperature "Avg. Room Temperature [%.1f °C]"   <temperature>   (Status)
-
-
-// lumières de la piscine
-Dimmer light_piscine_perimetre_1       "Lumière ambiance"         (gPiscine, lumieres)     ["Lumiere"]
-Dimmer light_piscine_submergee_1       "Lumière aquatique"         (gPiscine, lumieres)     ["Lumiere"]
-
-// verrous
-Switch verrous_piscine              "Verrous piscine"         (gPiscine, verrous)     ["Verrou"]
-Switch verrous_jardin_exterieur     "Verrous exterieur"       (gJardin, verrous)      ["Verrou"]
-
-
-Number temp_piscine_desiree             "Piscine (désirée):  [%.1f °C]"               <temperature>       (gPiscine, gThermostat)   ["Temperature", "Controller"]
-Number temp_piscine_actuelle            "Piscine (actuelle):    [%.1f °C]"            <temperature>       (gPiscine, gTemperature)   ["Temperature", "Mesure", "TempActuelle"]
-
-
+Switch mylamp "Mqtt controlled" {channel="mqtt:topic:mosquitto:mything:lamp"}

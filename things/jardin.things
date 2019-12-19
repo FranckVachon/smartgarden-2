@@ -1,40 +1,13 @@
-yahooweather:weather:berlin [ location=638242 ]
 
-astro:sun:home  [ geolocation="52.5200066,13.4049540", interval=60 ]
-astro:moon:home [ geolocation="52.5200066,13.4049540", interval=60 ]
-ntp:ntp:demo    [ hostname="nl.pool.ntp.org", refreshInterval=60, refreshNtp=30 ]
 
-/**
-    Fichier fictif représentatif d'une chambre réelle
-**/
 
-Bridge hue:bridge:mybridge [ ipAddress="192.168.3.123" ] {
-	// plafonnier
-	Thing 0210 lamp1 [lightId="1"]  //référer par hue:0210:mybridge:lamp1   
-	// lampe de chevet
-	Thing 0210 lamp2 [lightId="2"]  // référer par hue:0210:mybridge:lamp2            
-}
+// définir le broker: rouler en localhost sans gossage de safety
 
-// voir description à https://www.openhab.org/addons/bindings/zwave/doc/things.html
-Bridge  zwave:serial_zstick:8c582004    "ZWave Controller"  [ port="/dev/ttyACM0", controller_softreset="false", controller_master="true", heal_enable="true", security_networkkey="???" ] {
-	// ampèremètres placés sur les interrupteurs du plafonnier
-    Thing   shenzhen_powerplug_00_000       node2   "current meter on ceiling light door switch " @ "smart bedroom"   [ node_id=2 ] // currentMeter_switch1_lamp_1 
-    Thing   shenzhen_powerplug_00_000       node3   "current meter on ceiling light bed switch" @ "smart bedroom"     [ node_id=3 ] // currentMeter_switch2_lamp_1
-    // ampèremètres placés sur les interrupteurs
-    Thing   shenzhen_powerplug_00_000      node4   "current meter on bed light door switch" @ "smart bedroom"        [ node_id=4 ] // currentMeter_switch1_lamp_2
-    Thing   shenzhen_powerplug_00_000  	node5   "current meter on bed light bed switch" @ "smart bedroom"         [ node_id=5 ] // currentMeter_switch2_lamp_2
-
-	// interrupteur 3-way pour le plafonnier
-    Thing   shenzhen_eu2_00_000       node6   "ceiling light switch 1 close to the door " @ "smart bedroom"   [ node_id=6 ] // switch1_lamp_1 
-    Thing   shenzhen_eu2_00_000       node7   "ceiling light switch 2 close to the bed" @ "smart bedroom"     [ node_id=7 ] // switch2_lamp_1
-    // interrupteur 3-way de la lampe de chevet
-    Thing   shenzhen_eu2_00_000       node8   "bed light switch 1 close to the door " @ "smart bedroom"   [ node_id=8 ] // switch1_lamp_2 
-    Thing   shenzhen_eu2_00_000       node9   "bed light switch 2 close to the bed" @ "smart bedroom"     [ node_id=9 ] // switch2_lamp_2
-
-    //détecteur de mouvements et capteur de luminosité
-    // https://www.openhab.org/addons/bindings/zwave/thing.html?manufacturer=shenzhen&file=motionsensor_0_0.html
-    Thing   shenzhen_motionsensor_00_000       node10   "détecteur de mouvements à (0,0)" @ "smart bedroom"     [ node_id=10 ] // motionsensor_1, luxmeter_1, battery
-    Thing   shenzhen_motionsensor_00_000       node11   "détecteur de mouvements à (4,0)" @ "smart bedroom"     [ node_id=11 ] // motionsensor_2
-    Thing   shenzhen_motionsensor_00_000       node12   "détecteur de mouvements à (0,4)" @ "smart bedroom"     [ node_id=11 ] // motionsensor_3
-    Thing   shenzhen_motionsensor_00_000       node13   "détecteur de mouvements à (4,4)" @ "smart bedroom"     [ node_id=11 ] // motionsensor_4, luxmeter_2, battery
+Bridge mqtt:broker:mosquitto [ host="0.0.0.0", secure=false ]
+{
+    Thing topic mything {
+    Channels:
+        Type switch : lamp "Kitchen Lamp" [ stateTopic="lamp/enabled", commandTopic="lamp/enabled/set", postCommand="true" ]
+        Type string : alarm "Alarm system" [ stateTopic="alarm/panel/state", commandTopic="alarm/panel/set", postCommand="true"]
+    }
 }
