@@ -49,3 +49,5 @@ Bridge mqtt:broker:mosquitto [ host="0.0.0.0", secure=false ]
 		Type switch : sprinklers "All sprinklers" [ stateTopic="sprinklers/enabled", commandTopic="sprinklers/enabled/set", postCommand="true"]
     }
 }
+
+

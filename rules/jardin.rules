@@ -650,9 +650,9 @@ end
 rule "Log Message contact porte cloture ON"
 when
     Item contact_porte_cloture changed from OFF to ON
-    lumieres.sendCommand(ON)
 then
     logInfo("Detecteur contact cloture", "Detecteur de contact de la cloture est a ON.")
+    lumieres.sendCommand(ON)
 end 
 
 rule "Log Message contact porte piscine OFF"
